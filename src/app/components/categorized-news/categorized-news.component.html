@@ -1,0 +1,9 @@
+<div class="articles">
+  <h3>Technology News</h3>
+  <div *ngFor="let article of articles" class="article">
+    <h4>{{ article.title }}</h4>
+    <p><strong>Author:</strong> {{ article.author }}</p>
+    <p><strong>Date:</strong> {{ article.date }}</p>
+    <p>{{ article.summary }}</p>
+  </div>
+</div>
