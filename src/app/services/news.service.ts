@@ -7,31 +7,33 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class NewsService {
-  private apiUrl = environment.backendUrl;
+  private apiUrl = environment.backendUrl+ '/api/news';
 
   constructor(private http: HttpClient) {}
 
   // Fetch articles with optional filters
   getArticles(filters?: { [key: string]: string | undefined }): Observable<any> {
     let params = new HttpParams();
+
+
+    // Add filters to the query params
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
-        if (value) {
+        if (value !== undefined && value !== null && value !== '') {
           params = params.set(key, value);
         }
       });
     }
-    //return this.http.get(this.apiUrl, { params });
-    return this.http.get(`${this.apiUrl}/api/news`);
 
-  }
+    console.log('Logging parameters:', params); 
 
-  getUncategorizedNews(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/api/news`);
-  }
 
-  categorizeNews(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/api/news`);
+  
+    return this.http.get(this.apiUrl, {
+      params: params,
+      headers: {} // Avoid adding unnecessary headers
+    });
+
   }
 }
 

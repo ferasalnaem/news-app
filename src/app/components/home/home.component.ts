@@ -13,28 +13,93 @@ import { NewsService } from '../../services/news.service';
 
 export class HomeComponent {
   articles: any[] = [];
-  categories: string[] = ['Technology', 'Health', 'Sports', 'Business'];
-  filters: { category?: string; author?: string; date?: string } = {};
+  currentPage: number = 0;  // Current page
+  totalArticles: number = 0;  // Total number of articles
+  articlesPerPage: number = 20;  // Number of articles per page
+  hasMoreArticles: boolean = true;
+
+  filters: any = {
+    category: '',
+    author: '',
+    fromDate: '',
+    sortBy: 'publishedAt',
+    order: '',
+    page: 0 ,
+    limit: 20
+  };
+  categories: string[] = ['Politics', 'Wellness', 'Entertainment', 'Travel', 'Style & beauty',
+    'Parenting', 'Healthy Living', 'Queer Voices', 'Food & Drink', 'Business', 'Comedy', 'Sports', 'Black Voices', 'Home & Living', 'Parents',
+    'The WorldPost', 'Wedding', 'Women', 'Crime', 'Impact', 'Divorce', 'World News', 'Media', 'Weird News', 'Green', 'WorldPost', 'Religion', 
+    'Style', 'Science', 'Tech', 'Taste', 'Money', 'Arts', 'Environment', 'Fifty', 'Good News', 'U.S. News', 'Arts & Culture', 'College', 
+    'Latino Voices', 'Culture & Arts', 'Education'
+  ]; 
 
   constructor(private newsService: NewsService) {}
 
 
   ngOnInit(): void {
-    // Fetch articles when the component initializes
     this.fetchArticles();
   }
 
   fetchArticles(): void {
-    console.log('Sending filters:', this.filters); // Log filters being sent
+    console.log('Sending filters:', this.filters); 
     this.newsService.getArticles(this.filters).subscribe((data: any) => {
-      console.log('Received data:', data); // Log the received response
+      console.log('Received data:', data); 
       this.articles = data || [];
-      console.log('First article:', this.articles[0]);
+      this.totalArticles = data.length;
+      console.log('total count:', this.totalArticles); 
+      if (data.length < this.articlesPerPage) {
+        this.hasMoreArticles = false;
+      }
+
     });
   }
+
+  // Move to the next page
+  nextPage() {
+    if (this.hasMoreArticles) {
+      this.currentPage = this.currentPage + 1;
+      this.filters.page= this.currentPage;
+      console.log('Sending new filters:', this.filters); 
+      console.log('New page', this.filters.page); 
+      this.fetchArticles();
+    }
+  }
+
+  // Move to the previous page
+  previousPage() {
+    if (this.currentPage > 0) {
+      this.hasMoreArticles = true;
+      this.currentPage = this.currentPage -1 ;
+      this.filters.page= this.currentPage;
+      console.log('Sending new filters:', this.filters); 
+      this.fetchArticles();
+    }
+  }
+
+ applyFilters(): void {
+
+  this.filters.page= 0;
+  this.hasMoreArticles = true;
+
+ console.log('Sending new filters:', this.filters); 
+  this.fetchArticles();
+}
+
   
-  applyFilter(): void {
-    this.fetchArticles();
+  resetFilters(): void {
+    this.hasMoreArticles = true;
+    
+    this.filters = {
+      category: '',
+      author: '',
+      fromDate: '',
+      sortBy: 'publishedAt',
+      order: '',
+      page: 0 ,
+      limit: 20
+    };
+    this.fetchArticles(); // Refresh the articles list
   }
 
 }

@@ -1,29 +1,20 @@
 .navbar {
     display: flex;
     justify-content: space-between;
-    background-color: #333;
+    background-color: rgb(51, 98, 119);
     padding: 10px 20px;
     color: white;
   }
   
   .navbar .logo {
     font-size: 1.5em;
-    color: white;
+    color: #00ffdd; /* Bootstrap primary color */
     text-decoration: none;
+    cursor: pointer; /* Show pointer on hover */
   }
   
-  .navbar ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
+  .navbar .logo:hover {
+    color: #b3cbc957; /* Slightly darker shade on hover */
   }
   
-  .navbar ul li a {
-    color: white;
-    text-decoration: none;
-  }
-  
-  .navbar ul li a:hover {
-    text-decoration: underline;
-  }
   

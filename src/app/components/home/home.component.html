@@ -1,35 +1,66 @@
 <div class="filters">
-  <h3>Filters</h3>
-  <div>
-    <label for="category">Category: </label>
-    <select id="category" [(ngModel)]="filters.category" (change)="applyFilter()">
-      <option value="">All</option>
+  <div class="filter-group">
+    <label for="category">Category</label>
+    <select [(ngModel)]="filters.category" id="category">
+      <option value="">All Categories</option>
       <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
     </select>
   </div>
-  <div>
-    <label for="author">Author: </label>
-    <input
-      id="author"
-      type="text"
+
+  <div class="filter-group">
+    <label for="author">Author</label>
+    <input 
+      type="text" 
+      id="author" 
       [(ngModel)]="filters.author"
-      (input)="applyFilter()"
-      placeholder="Enter author name"
     />
   </div>
-  <div>
-    <label for="date">Date: </label>
-    <input id="date" type="date" [(ngModel)]="filters.date" (change)="applyFilter()" />
+
+  <div class="filter-group">
+    <label for="fromDate">Published Date</label>
+    <input 
+      type="date" 
+      id="fromDate" 
+      [(ngModel)]="filters.fromDate"
+    />
+  </div>
+
+  <div class="filter-group">
+    <label for="sortBy">Sort By</label>
+    <select [(ngModel)]="filters.order" id="order">
+      <option value="desc">Newest First</option>
+      <option value="asc">Oldest First</option>
+    </select>
+  </div>
+
+  <!-- Apply Filters Button -->
+  <button (click)="applyFilters()">Apply Filters</button>
+
+  <!-- Reset Filters Button -->
+  <button (click)="resetFilters()">Reset Filters</button>
+</div>
+
+<div class="article-list">
+  <div *ngFor="let article of articles" class="article-card">
+    <div class="article-image">
+      <img *ngIf="article.urlToImage; else placeholder" [src]="article.urlToImage" alt="Article Image" />
+      <ng-template #placeholder>
+        <img src="https://via.placeholder.com/150" alt="Placeholder Image" />
+      </ng-template>
+    </div>
+
+    <div class="article-content">
+      <h2>{{ article.title }}</h2>
+      <p>{{ article.description }}</p>
+      <p>Date: {{ article.publishedAt | date: 'dd.MM.yyyy' }}</p>
+      <a [href]="article.url" target="_blank" class="read-more">Read more</a>
+    </div>
   </div>
 </div>
 
-<div class="articles">
-  <h3>News Articles</h3>
-  <div *ngFor="let article of articles">
-    <h2>{{ article.title }}</h2>
-    <p>{{ article.description }}</p>
-    <p><strong>Author:</strong> {{ article.author }}</p>
-    <p><strong>Published At:</strong> {{ article.publishedAt | date }}</p>
-    <a [href]="article.url" target="_blank">Read more</a>
-  </div>
+<!-- Pagination Controls -->
+<div class="pagination-controls">
+  <button (click)="previousPage()" [disabled]="currentPage === 0">Previous</button>
+  <span>Page {{ currentPage }}</span>
+  <button (click)="nextPage()" [disabled]="!hasMoreArticles">Next</button>
 </div>
