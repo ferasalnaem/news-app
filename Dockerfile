@@ -22,8 +22,11 @@ FROM nginx:1.23-alpine
 # Copy the built Angular app to the Nginx HTML folder
 COPY --from=build /app/dist/news-app/browser /usr/share/nginx/html
 
-# Expose port 80 for the Nginx server
+# Add a shell script for runtime configuration
+COPY docker-entrypoint.d/entrypoint.sh /docker-entrypoint.d/entrypoint.sh
+
+RUN chmod +x /docker-entrypoint.d/entrypoint.sh
+
 EXPOSE 80
 
-# Start the Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/bin/sh", "-c", "/docker-entrypoint.d/entrypoint.sh && nginx -g 'daemon off;'"]

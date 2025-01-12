@@ -7,9 +7,11 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class NewsService {
-  private apiUrl = environment.backendUrl+ '/api/news';
+  private apiUrl: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.apiUrl = (window as any)['env']?.backendUrl || 'http://localhost:8080';
+  }
 
   // Fetch articles with optional filters
   getArticles(filters?: { [key: string]: string | undefined }): Observable<any> {
@@ -29,7 +31,7 @@ export class NewsService {
 
 
   
-    return this.http.get(this.apiUrl, {
+    return this.http.get(this.apiUrl + '/api/news', {
       params: params,
       headers: {} // Avoid adding unnecessary headers
     });
